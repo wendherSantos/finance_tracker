@@ -107,7 +107,7 @@ layout = dbc.Col(
                                         ),
                                         dbc.Col(
                                             [
-                                                dbc.Label("Extras"),
+                                                dbc.Label("Opções Extras"),
                                                 dbc.Checklist(
                                                     options=[
                                                         {
@@ -307,8 +307,14 @@ layout = dbc.Col(
                                     [
                                         dbc.Label("Opções Extras"),
                                         dbc.Checklist(
-                                            options=[],
-                                            value=[],
+                                            options=[
+                                                {"label": "Foi recebida", "value": 1},
+                                                {
+                                                    "label": "Receita Recorrente",
+                                                    "value": 2,
+                                                },
+                                            ],
+                                            value=[1],
                                             id="switches-input-despesa",
                                             switch=True,
                                         ),
@@ -520,4 +526,41 @@ def salve_form_receita(n, descricao, valor, date, switches, categoria, dict_rece
         df_receitas.to_csv("df_receitas.csv")
 
     data_return = df_receitas.to_dict()
+    return data_return
+
+
+# Enviar Form despesa
+@app.callback(
+    Output("store-despesas", "data"),
+    Input("salvar_despesa", "n_clicks"),
+    [
+        State("txt-despesa", "value"),
+        State("valor_despesa", "value"),
+        State("date-despesas", "date"),
+        State("switches-input-despesa", "value"),
+        State("select_despesa", "value"),
+        State("store-despesas", "data"),
+    ],
+)
+def salve_form_receita(n, descricao, valor, date, switches, categoria, dict_despesas):
+    df_despesas = pd.DataFrame(dict_despesas)
+
+    if n and not (valor == "" or valor == None):
+        valor = round(float(valor), 2)
+        date = pd.to_datetime(date).date()
+        categoria = categoria[0] if type(categoria) == list else categoria
+        recebido = 1 if 1 in switches else 0
+        fixo = 1 if 2 in switches else 0
+
+        df_despesas.loc[df_despesas.shape[0]] = [
+            valor,
+            recebido,
+            fixo,
+            date,
+            categoria,
+            descricao,
+        ]
+        df_despesas.to_csv("df_despesas.csv")
+
+    data_return = df_despesas.to_dict()
     return data_return

@@ -1,13 +1,14 @@
 import pandas as pd
 import os
+from dateutil import parser
 
 if ("df_despesas.csv" in os.listdir()) and ("df_receitas.csv" in os.listdir()):
-    df_despesas = pd.read_csv("df_despesas.csv", index_col=0, parse_dates=True)
-    df_receitas = pd.read_csv("df_receitas.csv", index_col=0, parse_dates=True)
-    df_despesas["Data"] = pd.to_datetime(df_despesas["Data"])
-    df_receitas["Data"] = pd.to_datetime(df_receitas["Data"])
-    df_despesas["Data"] = df_despesas["Data"].apply(lambda x: x.date())
-    df_receitas["Data"] = df_receitas["Data"].apply(lambda x: x.date())
+    df_despesas = pd.read_csv("df_despesas.csv", index_col=0)
+    df_receitas = pd.read_csv("df_receitas.csv", index_col=0)
+    df_despesas["Data"] = df_despesas["Data"].apply(lambda x: parser.parse(x).date())
+    df_receitas["Data"] = df_receitas["Data"].apply(lambda x: parser.parse(x).date())
+    df_despesas.to_csv("df_despesas.csv")
+    df_receitas.to_csv("df_receitas.csv")
 
 else:
     data_structure = {
