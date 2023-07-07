@@ -6,6 +6,8 @@ from datetime import date, datetime
 from app import app
 
 # =========  Componentes  =========== #
+
+# Componente de calendário 1
 calendario1 = html.Div(
     [
         dcc.DatePickerSingle(
@@ -14,11 +16,13 @@ calendario1 = html.Div(
             max_date_allowed=date(2030, 12, 31),
             initial_visible_month=datetime.today(),
             date=datetime.today(),
+            display_format="DD/MM/YYYY",  # Define o formato da data
         ),
         html.Div(id="output_container_datepicker"),
     ]
 )
 
+# Componente de calendário 2
 calendario2 = html.Div(
     [
         dcc.DatePickerSingle(
@@ -27,6 +31,7 @@ calendario2 = html.Div(
             max_date_allowed=date(2030, 12, 31),
             initial_visible_month=datetime.today(),
             date=datetime.today(),
+            display_format="DD/MM/YYYY",  # Define o formato da data
         ),
         html.Div(id="output_container_datepicker2"),
     ]
@@ -34,6 +39,8 @@ calendario2 = html.Div(
 
 
 # =========  Callbacks  =========== #
+
+# Callback para atualizar a saída do calendário 1
 @app.callback(
     Output("output_container_datepicker", "children"),
     Input("date_picker_single", "date"),
@@ -42,11 +49,11 @@ def update_output(date_value):
     string_prefix = "Selecionado: "
     if date_value is not None:
         date_object = date.fromisoformat(date_value)
-        date_string = date_object.strftime("%d %B, %Y")
+        date_string = date_object.strftime("%d/%m/%Y")  # Formata a data para DD/MM/AAAA
         return string_prefix + date_string
 
 
-# 2
+# Callback para atualizar a saída do calendário 2
 @app.callback(
     Output("output_container_datepicker2", "children"),
     Input("date_picker_single2", "date"),
@@ -55,5 +62,5 @@ def update_output(date_value):
     string_prefix = "Selecionado: "
     if date_value is not None:
         date_object = date.fromisoformat(date_value)
-        date_string = date_object.strftime("%d %B, %Y")
+        date_string = date_object.strftime("%d/%m/%Y")  # Formata a data para DD/MM/AAAA
         return string_prefix + date_string
